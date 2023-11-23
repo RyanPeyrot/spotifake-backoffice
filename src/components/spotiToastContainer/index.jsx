@@ -1,6 +1,6 @@
 import React from 'react';
 import {useToastService} from '../../services/toast-service';
-import {SpotiToast} from '../spotiToast';
+import {SpotiToast} from './spotiToast';
 
 const ToastContainer = () => {
   const {toasts} = useToastService();

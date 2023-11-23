@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {CheckIcon, XMarkIcon} from '@heroicons/react/24/solid';
 import {Toast} from 'flowbite-react';
 import {ToastToggle} from 'flowbite-react/lib/esm/components/Toast/ToastToggle';
-import {useToastService} from '../../services/toast-service';
+import {useToastService} from '../../../services/toast-service';
 
 export const SpotiToast = ({
   duration = 2000,
@@ -19,7 +19,7 @@ export const SpotiToast = ({
   }, []);
 
   return (
-    <Toast className="py-2 px-3">
+    <Toast className="py-2 px-3 toast">
       <>
         {type === 'success' ? (
           <CheckIcon className="text-white rounded-full p-1 bg-green-500 h-7 w-7" />
