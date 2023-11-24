@@ -1,3 +1,3 @@
-export const Playlists = () => {
+export const PlaylistsPage = () => {
   return <div>Playlists</div>;
 };

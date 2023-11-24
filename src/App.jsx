@@ -1,13 +1,15 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import Login from './pages/login';
-import Home from './pages/home';
+import {LoginPage} from './pages/login';
+import {HomePage} from './pages/home';
 import {Flowbite} from 'flowbite-react';
 import {ToastServiceProvider} from './services/toast-service';
 import ToastContainer from './components/spotiToastContainer';
 import {ConfettisServiceProvider} from './services/confettis-service';
 import ConfettisContainer from './components/confettisContainer';
 import {SpotiSidebar} from './components/sidebar';
-import {Playlists} from './pages/playlists';
+import {PlaylistsPage} from './pages/playlists';
+import {SongsPage} from './pages/songs';
+import {UsersPage} from './pages/users';
 
 const buttonSpotigreen =
   'bg-spotigreen text-spotiblack focus:!ring-0 active:opacity-80';
@@ -49,16 +51,21 @@ const App = () => {
     <Flowbite theme={{theme: spotifakeTheme}}>
       <div
         id="spotifake-app"
-        className="min-h-screen w-screen w-100 h-100 bg-spotiblack text-spotiwhite ml-72 p-6">
+        className="min-h-screen w-screen w-100 h-100 bg-spotiblack text-spotiwhite p-6 ml-72">
         <ToastServiceProvider>
           <ConfettisServiceProvider>
             <Router>
               <SpotiSidebar />
               <Routes>
-                <Route exact path="/" element={<Home></Home>} />
-                <Route path="/home" element={<Home></Home>} />
-                <Route path="/login" element={<Login></Login>} />
-                <Route path="/playlists" element={<Playlists></Playlists>} />
+                <Route exact path="/" element={<HomePage></HomePage>} />
+                <Route path="/home" element={<HomePage></HomePage>} />
+                <Route path="/login" element={<LoginPage></LoginPage>} />
+                <Route
+                  path="/playlists"
+                  element={<PlaylistsPage></PlaylistsPage>}
+                />
+                <Route path="/users" element={<UsersPage></UsersPage>} />
+                <Route path="/songs" element={<SongsPage></SongsPage>} />
               </Routes>
             </Router>
             <ConfettisContainer />

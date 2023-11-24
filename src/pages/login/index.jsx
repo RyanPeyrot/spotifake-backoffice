@@ -4,10 +4,10 @@ import {useToastService} from '../../services/toast-service';
 import {useNavigate} from 'react-router-dom';
 import {useConfettisService} from '../../services/confettis-service';
 
-const Login = () => {
+export const LoginPage = () => {
   const [form, setForm] = useState({
-    email: 'test',
-    password: '',
+    email: 'mail@mail.com',
+    password: 'mdp',
   });
 
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <div id="login">
+    <div id="login" className="absolute left-1/2 -translate-x-1/2 top-20 w-1/2">
       <form
         className="flex max-w-md flex-col gap-4 mx-auto pt-20"
         onSubmit={handleSubmit}>
@@ -84,5 +84,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;

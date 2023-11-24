@@ -84,6 +84,7 @@ export const SpotiSidebar = () => {
               },
             }}
             href="#"
+            to="/songs"
             icon={MusicalNoteIcon}>
             Musiques
           </Sidebar.Item>

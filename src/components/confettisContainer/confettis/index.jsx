@@ -30,7 +30,7 @@ export const Confettis = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen z-50">
+    <div className="pointer-events-none fixed top-0 left-0 w-screen h-screen z-50">
       <Particles
         init={particlesInit}
         options={{
