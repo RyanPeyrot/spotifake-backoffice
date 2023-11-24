@@ -2,6 +2,7 @@ import {Button, Label, TextInput} from 'flowbite-react';
 import {useState} from 'react';
 import {useToastService} from '../../services/toast-service';
 import {useNavigate} from 'react-router-dom';
+import {useConfettisService} from '../../services/confettis-service';
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -16,6 +17,7 @@ const Login = () => {
   };
 
   const {addToast} = useToastService();
+  const {throwConfettis} = useConfettisService();
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -33,6 +35,8 @@ const Login = () => {
       type: 'success',
       message: 'Vous êtes connecté',
     });
+
+    throwConfettis();
 
     navigate('/home');
   };
