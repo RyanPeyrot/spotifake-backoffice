@@ -1,0 +1,154 @@
+{
+  "data": {
+    "listenings": [
+      {
+        "name": "Jan.",
+        "value": 654321
+      },
+      {
+        "name": "Fév.",
+        "value": 567890
+      },
+      {
+        "name": "Mars",
+        "value": 678901
+      },
+      {
+        "name": "Avril",
+        "value": 543210
+      },
+      {
+        "name": "Mai",
+        "value": 678901
+      },
+      {
+        "name": "Juin",
+        "value": 543210
+      },
+      {
+        "name": "Juil.",
+        "value": 654321
+      },
+      {
+        "name": "Août",
+        "value": 567890
+      },
+      {
+        "name": "Sept.",
+        "value": 654321
+      },
+      {
+        "name": "Oct.",
+        "value": 543210
+      },
+      {
+        "name": "Nov.",
+        "value": 678901
+      },
+      {
+        "name": "Déc.",
+        "value": 567890
+      }
+    ],
+    "albums": [
+      {
+        "name": "Jan.",
+        "value": 3405
+      },
+      {
+        "name": "Fév.",
+        "value": 4590
+      },
+      {
+        "name": "Mars",
+        "value": 1098
+      },
+      {
+        "name": "Avril",
+        "value": 1283
+      },
+      {
+        "name": "Mai",
+        "value": 4321
+      },
+      {
+        "name": "Juin",
+        "value": 3495
+      },
+      {
+        "name": "Juil.",
+        "value": 2109
+      },
+      {
+        "name": "Août",
+        "value": 1249
+      },
+      {
+        "name": "Sept.",
+        "value": 3210
+      },
+      {
+        "name": "Oct.",
+        "value": 2389
+      },
+      {
+        "name": "Nov.",
+        "value": 4321
+      },
+      {
+        "name": "Déc.",
+        "value": 1098
+      }
+    ],
+    "songs": [
+      {
+        "name": "Jan.",
+        "value": 12345
+      },
+      {
+        "name": "Fév.",
+        "value": 18976
+      },
+      {
+        "name": "Mars",
+        "value": 23456
+      },
+      {
+        "name": "Avril",
+        "value": 14567
+      },
+      {
+        "name": "Mai",
+        "value": 19876
+      },
+      {
+        "name": "Juin",
+        "value": 15678
+      },
+      {
+        "name": "Juil.",
+        "value": 23456
+      },
+      {
+        "name": "Août",
+        "value": 18987
+      },
+      {
+        "name": "Sept.",
+        "value": 17654
+      },
+      {
+        "name": "Oct.",
+        "value": 19876
+      },
+      {
+        "name": "Nov.",
+        "value": 14567
+      },
+      {
+        "name": "Déc.",
+        "value": 12345
+      }
+    ]
+  }
+}
