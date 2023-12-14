@@ -9,7 +9,8 @@ import ConfettisContainer from './components/confettisContainer';
 import {SpotiSidebar} from './components/sidebar';
 import {PlaylistsPage} from './pages/playlists';
 import {SongsPage} from './pages/songs';
-import {UsersPage} from './pages/users';
+import {ArtistsPage} from './pages/artists';
+import {useState} from 'react';
 
 const buttonSpotigreen =
   'bg-spotigreen text-spotiblack focus:!ring-0 active:opacity-80';
@@ -22,6 +23,7 @@ const spotifakeTheme = {
       spotiwhite: 'bg-spotiwhite text-spotiblack focus:!ring-0',
       spotiblack: 'bg-spotiblack text-spotiwhite border focus:!ring-0',
       spotigreen: buttonSpotigreen,
+      danger: 'bg-red-800 text-spotiblack focus:!ring-0',
     },
   },
   label: {
@@ -44,18 +46,41 @@ const spotifakeTheme = {
       },
     },
   },
+  table: {
+    root: {
+      wrapper: 'font-bold',
+      base: 'text-left text-sm text-spotiwhite rounded-lg overflow-hidden',
+    },
+    head: {
+      cell: {
+        base: 'bg-spotiblack text-spotiwhite px-6 py-3',
+      },
+    },
+    row: {
+      base: 'text-spotiblack bg-white',
+    },
+  },
 };
 
 const App = () => {
+  const [collapsedSidebar, setCollapsedSidebar] = useState(false);
+  const onSidebarStateChange = value => {
+    setCollapsedSidebar(value);
+  };
+
   return (
     <Flowbite theme={{theme: spotifakeTheme}}>
       <div
         id="spotifake-app"
-        className="min-h-screen w-screen w-100 h-100 bg-spotiblack text-spotiwhite p-6 ml-72">
+        className={`min-h-screen w-[calc(100% - 288px - 24px)] h-100 bg-spotiblack text-spotiwhite duration-300 p-6 ${
+          collapsedSidebar ? 'ml-20' : 'ml-72'
+        } `}>
         <ToastServiceProvider>
           <ConfettisServiceProvider>
             <Router>
-              <SpotiSidebar />
+              <SpotiSidebar
+                sidebarStateChanged={value => onSidebarStateChange(value)}
+              />
               <Routes>
                 <Route exact path="/" element={<HomePage></HomePage>} />
                 <Route path="/home" element={<HomePage></HomePage>} />
@@ -64,7 +89,7 @@ const App = () => {
                   path="/playlists"
                   element={<PlaylistsPage></PlaylistsPage>}
                 />
-                <Route path="/users" element={<UsersPage></UsersPage>} />
+                <Route path="/artists" element={<ArtistsPage></ArtistsPage>} />
                 <Route path="/songs" element={<SongsPage></SongsPage>} />
               </Routes>
             </Router>
