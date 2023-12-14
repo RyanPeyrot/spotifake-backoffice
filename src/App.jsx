@@ -48,7 +48,7 @@ const spotifakeTheme = {
   },
   table: {
     root: {
-      wrapper: 'font-bold',
+      wrapper: 'overflow-x-auto relative',
       base: 'text-left text-sm text-spotiwhite rounded-lg overflow-hidden',
     },
     head: {
