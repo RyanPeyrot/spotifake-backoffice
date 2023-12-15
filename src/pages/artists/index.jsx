@@ -1,16 +1,26 @@
-import {Checkbox, Table} from 'flowbite-react';
+import {Button, Checkbox, Table, TextInput} from 'flowbite-react';
 import {useEffect, useState} from 'react';
+import axiosService from '../../services/axios-service';
+import {useToastService} from '../../services/toast-service';
+import {PencilIcon} from '@heroicons/react/24/solid';
+import {EditArtistModal} from './editArtistModal';
 
 export const ArtistsPage = () => {
   const [artists, setArtists] = useState([]);
+  const [filteredArtists, setFilteredArtists] = useState([]);
   const [selectedArtists, setSelectedArtists] = useState([]);
+  const [selectedArtist, setSelectedArtist] = useState(null);
+  const [editArtistModalState, setEditArtistModalState] = useState(false);
+  const [addArtistModalState, setAddArtistModalState] = useState(false);
+  const [deleteArtistModalState, setDeleteArtistModalState] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const {addToast} = useToastService();
 
   const handleSelectAll = () => {
     if (selectedArtists.length === artists.length) {
       setSelectedArtists([]);
     } else {
-      setSelectedArtists(artists.map(artist => artist.id));
+      setSelectedArtists(artists.map(artist => artist._id));
     }
   };
 
@@ -22,95 +32,126 @@ export const ArtistsPage = () => {
     }
   };
 
+  const handleEditArtist = artist => {
+    setSelectedArtist(artist);
+    setEditArtistModalState(true);
+  };
+
+  const getArtists = () => {
+    axiosService
+      .get('/artists')
+      .then(({data}) => {
+        const newArtists = data.map(artist => ({
+          ...artist,
+          tag: Object.values(artist).join(','),
+        }));
+
+        setArtists(newArtists);
+      })
+      .catch(error => {
+        console.error(error);
+
+        addToast({
+          title: 'Erreur',
+          message: "Impossible d'obtenir la liste des artistes",
+          type: 'error',
+          id: Math.random(),
+        });
+      });
+  };
+
   useEffect(() => {
-    const fakeArtists = [
-      {
-        id: 1,
-        name: 'Song 1',
-        artist: ['Artist 1', 'Artist 2'],
-        album: 'Album 1',
-        release_date: '2021-06-01 12:00:00',
-        thumbnail: 'https://via.placeholder.com/150',
-        stocking_reference: 'ABCD1234',
-      },
-      {
-        id: 2,
-        name: 'Song 2',
-        artist: ['Artist 1'],
-        album: 'Album 2',
-        release_date: '2021-06-01 12:00:00',
-        thumbnail: 'https://via.placeholder.com/150',
-        stocking_reference: 'ABCD1234',
-      },
-    ].map(artist => ({
-      ...artist,
-      tag: `ID${artist.id}-${artist.name}-${artist.artist.join('-')}-${
-        artist.album
-      }-${artist.release_date}-${artist.stocking_reference}`,
-    }));
+    getArtists();
+  }, [searchTerm]);
 
-    setArtists(fakeArtists);
-  }, []);
+  useEffect(() => {
+    const filteredArtists = artists.filter(artist =>
+      artist.tag.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
 
-  const filteredArtists = artists.filter(artist =>
-    artist.tag.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+    setFilteredArtists(filteredArtists);
+  }, [artists]);
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold">Liste des artistes</h1>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-semibold">Liste des artistes</h1>
 
-      <input
-        type="text"
-        placeholder="Rechercher un artiste"
-        value={searchTerm}
-        onChange={e => setSearchTerm(e.target.value)}
-        className="mt-4 w-2/3 p-2 border border-gray-300 text-spotiblack rounded"
-      />
+        <div className="flex gap-4">
+          <TextInput
+            type="text"
+            placeholder="Rechercher une playlist (par ID, nom, créateur ou musique)"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
 
-      <Table className="mt-6">
+          <Button onClick={() => setAddArtistModalState(true)}>Ajouter</Button>
+
+          <Button
+            disabled={selectedArtists.length == 0}
+            onClick={() => setDeleteArtistModalState(true)}>
+            Supprimer
+          </Button>
+        </div>
+      </div>
+
+      <Table className="mt-6 min-w-full">
         <Table.Head>
-          <Table.HeadCell
-            className="text-center"
-            onClick={() => handleSelectAll()}>
+          <Table.HeadCell className="text-center">
             <Checkbox
+              onChange={() => handleSelectAll()}
               checked={selectedArtists.length === artists.length}></Checkbox>
           </Table.HeadCell>
           <Table.HeadCell>ID</Table.HeadCell>
           <Table.HeadCell>Nom</Table.HeadCell>
-          <Table.HeadCell>Artistes</Table.HeadCell>
-          <Table.HeadCell>Ajoutée le</Table.HeadCell>
+          <Table.HeadCell>Albums</Table.HeadCell>
           <Table.HeadCell>Image (URL)</Table.HeadCell>
-          <Table.HeadCell>Référence</Table.HeadCell>
+          <Table.HeadCell>Éditer</Table.HeadCell>
         </Table.Head>
 
         <Table.Body>
           {filteredArtists.map(artist => (
-            <Table.Row key={artist.id}>
+            <Table.Row key={artist._id}>
               <Table.Cell>
                 <Checkbox
-                  checked={selectedArtists.includes(artist.id)}
-                  onChange={() => handleSelect(artist.id)}></Checkbox>
+                  checked={selectedArtists.includes(artist._id)}
+                  onChange={() => handleSelect(artist._id)}></Checkbox>
               </Table.Cell>
-              <Table.Cell>{artist.id}</Table.Cell>
+              <Table.Cell className="font-semibold">{artist._id}</Table.Cell>
               <Table.Cell>{artist.name}</Table.Cell>
-              <Table.Cell>{artist.artist.join(', ')}</Table.Cell>
+              <Table.Cell>{artist.albums.length}</Table.Cell>
               <Table.Cell>
-                {new Date(artist.release_date).toDateString()}
+                {artist.thumbnail ? (
+                  <a
+                    href={artist.thumbnail}
+                    target="_blank"
+                    className="text-spotigreen">
+                    <img
+                      className="h-12 w-12"
+                      src={artist.thumbnail}
+                      alt="Artist profile picture"
+                    />
+                  </a>
+                ) : (
+                  '-'
+                )}
               </Table.Cell>
               <Table.Cell>
-                <a
-                  href={artist.thumbnail}
-                  target="_blank"
-                  className="text-spotigreen">
-                  {artist.thumbnail}
-                </a>
+                <PencilIcon
+                  className="w-4 h-4 cursor-pointer text-spotigreen"
+                  onClick={() => handleEditArtist(artist)}
+                />
               </Table.Cell>
-              <Table.Cell>{artist.stocking_reference}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
+
+      <EditArtistModal
+        show={editArtistModalState}
+        onClose={setEditArtistModalState}
+        artist={selectedArtist}
+      />
     </div>
   );
 };
