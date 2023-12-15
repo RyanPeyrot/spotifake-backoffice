@@ -3,11 +3,13 @@ import {SpotiModal} from '../../../components/modal';
 import {useEffect, useState} from 'react';
 import axiosService from '../../../services/axios-service';
 import Select from 'react-tailwindcss-select';
+import {useToastService} from '../../../services/toast-service';
 
 export const EditArtistModal = ({show, onClose, artist, albums}) => {
   const [newArtist, setNewArtist] = useState(artist);
   const [loading, setLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
+  const {addToast} = useToastService();
 
   useEffect(() => {
     setNewArtist(artist);
@@ -33,6 +35,11 @@ export const EditArtistModal = ({show, onClose, artist, albums}) => {
         } else {
           handleUploadThumbnail().then(() => {
             handleClose(true);
+            addToast({
+              title: 'Succès',
+              message: 'Artiste modifié avec succès',
+              type: 'success',
+            });
           });
         }
       })
@@ -78,12 +85,19 @@ export const EditArtistModal = ({show, onClose, artist, albums}) => {
             <FileInput
               placeholder="Lien de l'image de l'artiste"
               className="mt-1"
-              onChange={e =>
-                setThumbnail(URL.createObjectURL(e.target.files[0]))
-              }
+              onChange={e => setThumbnail(e.target.files[0])}
             />
 
-            {thumbnail && <img className="mt-2 h-20 w-20" src={thumbnail} />}
+            {thumbnail && (
+              <img
+                className="mt-2 h-20 w-20"
+                src={
+                  typeof thumbnail == 'string'
+                    ? thumbnail
+                    : URL.createObjectURL(thumbnail)
+                }
+              />
+            )}
           </div>
 
           <div>

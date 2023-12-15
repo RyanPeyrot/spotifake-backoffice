@@ -1,24 +1,24 @@
 import {FileInput, Label, TextInput} from 'flowbite-react';
 import {SpotiModal} from '../../../components/modal';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import axiosService from '../../../services/axios-service';
 import Select from 'react-tailwindcss-select';
+import {useToastService} from '../../../services/toast-service';
 
-export const AddArtistModal = ({show, onClose, artist, albums}) => {
-  const [newArtist, setNewArtist] = useState({
+export const AddArtistModal = ({show, onClose, albums}) => {
+  const [artist, setArtist] = useState({
     name: '',
     albums: [],
-    thumbnail: '',
   });
   const [loading, setLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
-
-  useEffect(() => {
-    setNewArtist(artist);
-  }, [show]);
+  const {addToast} = useToastService();
 
   const handleClose = (success = false) => {
-    setNewArtist(null);
+    setArtist({
+      name: '',
+      albums: [],
+    });
     setLoading(false);
     setThumbnail(null);
     onClose(success);
@@ -28,14 +28,19 @@ export const AddArtistModal = ({show, onClose, artist, albums}) => {
     setLoading(true);
 
     axiosService
-      .put(`/artists/${newArtist._id}`, newArtist)
+      .post(`/artists`, artist)
       .then(({data}) => {
         if (!thumbnail) {
           handleClose(true);
           return;
         } else {
-          handleUploadThumbnail().then(() => {
+          handleUploadThumbnail(data._id).then(() => {
             handleClose(true);
+            addToast({
+              title: 'Succès',
+              message: 'Artiste ajouté avec succès',
+              type: 'success',
+            });
           });
         }
       })
@@ -44,12 +49,12 @@ export const AddArtistModal = ({show, onClose, artist, albums}) => {
       });
   };
 
-  const handleUploadThumbnail = async () => {
+  const handleUploadThumbnail = async artistId => {
     try {
       const formData = new FormData();
       formData.append('file', thumbnail);
 
-      await axiosService.put(`/artists/thumbnail/${artist._id}`, formData);
+      await axiosService.put(`/artists/thumbnail/${artistId}`, formData);
     } catch (error) {
       console.error(error);
     }
@@ -57,68 +62,68 @@ export const AddArtistModal = ({show, onClose, artist, albums}) => {
 
   return (
     <SpotiModal
-      title="Modifier un artiste"
-      confirm="Modifier"
+      title="Ajouter un artiste"
+      confirm="Ajouter"
       show={show}
       onClose={() => handleClose()}
       onSubmit={() => handleSubmit()}
       loading={loading}>
-      {!!newArtist ? (
-        <div className="min-h-[50vh]">
-          <div className="mb-4">
-            <Label className="text-spotiblack">Nom de l'artiste</Label>
-            <TextInput
-              type="text"
-              placeholder="Nom de l'artiste"
-              className="mt-1"
-              value={newArtist.name}
-              onChange={e => setNewArtist({...newArtist, name: e.target.value})}
-            />
-          </div>
-
-          <div className="mb-4">
-            <Label className="text-spotiblack">Photo de l'artiste</Label>
-            <FileInput
-              placeholder="Lien de la photo de l'artiste"
-              className="mt-1"
-              onChange={e => setThumbnail(e.target.files[0])}
-            />
-
-            {thumbnail && (
-              <img
-                className="mt-2 h-20 w-20"
-                src={URL.createObjectURL(thumbnail)}
-              />
-            )}
-          </div>
-
-          <div>
-            <Label className="text-spotiblack">Albums</Label>
-            <Select
-              isMultiple={true}
-              placeholder="Albums de l'artiste"
-              className="mt-1"
-              value={newArtist.albums.map(album => ({
-                value: album._id,
-                label: album.name,
-              }))}
-              onChange={e =>
-                setNewArtist({
-                  ...newArtist,
-                  albums: e.map(album => ({
-                    ...album,
-                    _id: album.value,
-                    name: album.label,
-                  })),
-                })
-              }
-              options={albums || []}
-            />
-          </div>
+      <div className="min-h-[50vh]">
+        <div className="mb-4">
+          <Label className="text-spotiblack">Nom de l'artiste</Label>
+          <TextInput
+            type="text"
+            placeholder="Nom de l'artiste"
+            className="mt-1"
+            value={artist.name}
+            onChange={e => setArtist({...artist, name: e.target.value})}
+          />
         </div>
-      ) : (
-        <></>
-      )}
+
+        <div className="mb-4">
+          <Label className="text-spotiblack">Image de l'artiste</Label>
+          <FileInput
+            placeholder="Lien de l'image de l'artiste"
+            className="mt-1"
+            onChange={e => setThumbnail(e.target.files[0])}
+          />
+
+          {thumbnail && (
+            <img
+              className="mt-2 h-20 w-20"
+              src={
+                typeof thumbnail == 'string'
+                  ? thumbnail
+                  : URL.createObjectURL(thumbnail)
+              }
+            />
+          )}
+        </div>
+
+        <div>
+          <Label className="text-spotiblack">Albums</Label>
+          <Select
+            isMultiple={true}
+            placeholder="Albums de l'artiste"
+            className="mt-1"
+            value={artist.albums.map(album => ({
+              value: album._id,
+              label: album.name,
+            }))}
+            onChange={e =>
+              setArtist({
+                ...artist,
+                albums: e.map(album => ({
+                  ...album,
+                  _id: album.value,
+                  name: album.label,
+                })),
+              })
+            }
+            options={albums || []}
+          />
+        </div>
+      </div>
     </SpotiModal>
   );
 };
