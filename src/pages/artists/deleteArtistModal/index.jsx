@@ -21,6 +21,11 @@ export const DeleteArtistModal = ({show, onClose, artists}) => {
     )
       .then(() => {
         handleClose(true);
+        addToast({
+          type: 'success',
+          message: 'Artistes supprimés avec succès',
+          title: 'Succès',
+        });
       })
       .catch(error => {
         console.error(error);
