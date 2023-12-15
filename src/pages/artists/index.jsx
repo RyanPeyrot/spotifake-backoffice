@@ -60,6 +60,7 @@ export const ArtistsPage = () => {
     setDeleteArtistModalState(false);
 
     if (success) {
+      setSelectedArtists([]);
       getArtists();
     }
   };

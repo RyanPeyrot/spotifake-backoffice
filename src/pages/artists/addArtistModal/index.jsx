@@ -32,6 +32,11 @@ export const AddArtistModal = ({show, onClose, albums}) => {
       .then(({data}) => {
         if (!thumbnail) {
           handleClose(true);
+          addToast({
+            title: 'Succès',
+            message: 'Artiste ajouté avec succès',
+            type: 'success',
+          });
           return;
         } else {
           handleUploadThumbnail(data._id).then(() => {
