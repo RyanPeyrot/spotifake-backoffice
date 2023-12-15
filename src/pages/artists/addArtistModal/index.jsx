@@ -4,14 +4,17 @@ import {useEffect, useState} from 'react';
 import axiosService from '../../../services/axios-service';
 import Select from 'react-tailwindcss-select';
 
-export const EditArtistModal = ({show, onClose, artist, albums}) => {
-  const [newArtist, setNewArtist] = useState(artist);
+export const AddArtistModal = ({show, onClose, artist, albums}) => {
+  const [newArtist, setNewArtist] = useState({
+    name: '',
+    albums: [],
+    thumbnail: '',
+  });
   const [loading, setLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
 
   useEffect(() => {
     setNewArtist(artist);
-    setThumbnail(artist?.thumbnail);
   }, [show]);
 
   const handleClose = (success = false) => {
@@ -74,16 +77,19 @@ export const EditArtistModal = ({show, onClose, artist, albums}) => {
           </div>
 
           <div className="mb-4">
-            <Label className="text-spotiblack">Image de l'artiste</Label>
+            <Label className="text-spotiblack">Photo de l'artiste</Label>
             <FileInput
-              placeholder="Lien de l'image de l'artiste"
+              placeholder="Lien de la photo de l'artiste"
               className="mt-1"
-              onChange={e =>
-                setThumbnail(URL.createObjectURL(e.target.files[0]))
-              }
+              onChange={e => setThumbnail(e.target.files[0])}
             />
 
-            {thumbnail && <img className="mt-2 h-20 w-20" src={thumbnail} />}
+            {thumbnail && (
+              <img
+                className="mt-2 h-20 w-20"
+                src={URL.createObjectURL(thumbnail)}
+              />
+            )}
           </div>
 
           <div>

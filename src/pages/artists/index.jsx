@@ -4,6 +4,8 @@ import axiosService from '../../services/axios-service';
 import {useToastService} from '../../services/toast-service';
 import {PencilIcon} from '@heroicons/react/24/solid';
 import {EditArtistModal} from './editArtistModal';
+import {AddArtistModal} from './addArtistModal';
+import {DeleteArtistModal} from './deleteArtistModal';
 
 export const ArtistsPage = () => {
   const [artists, setArtists] = useState([]);
@@ -46,6 +48,22 @@ export const ArtistsPage = () => {
     }
   };
 
+  const handleAddModalClose = success => {
+    setAddArtistModalState(false);
+
+    if (success) {
+      getArtists();
+    }
+  };
+
+  const handleDeleteModalClose = success => {
+    setDeleteArtistModalState(false);
+
+    if (success) {
+      getArtists();
+    }
+  };
+
   const getArtists = () => {
     axiosService
       .get('/artists')
@@ -64,7 +82,6 @@ export const ArtistsPage = () => {
           title: 'Erreur',
           message: "Impossible d'obtenir la liste des artistes",
           type: 'error',
-          id: Math.random(),
         });
       });
   };
@@ -89,14 +106,13 @@ export const ArtistsPage = () => {
           title: 'Erreur',
           message: "Impossible d'obtenir la liste des albums",
           type: 'error',
-          id: Math.random(),
         });
       });
   };
 
   useEffect(() => {
     getArtists();
-  }, [searchTerm]);
+  }, []);
 
   useEffect(() => {
     getAlbums();
@@ -108,7 +124,7 @@ export const ArtistsPage = () => {
     );
 
     setFilteredArtists(filteredArtists);
-  }, [artists]);
+  }, [artists, searchTerm]);
 
   return (
     <div>
@@ -118,7 +134,7 @@ export const ArtistsPage = () => {
         <div className="flex gap-4">
           <TextInput
             type="text"
-            placeholder="Rechercher une playlist (par ID, nom, créateur ou musique)"
+            placeholder="Rechercher un artiste"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
@@ -190,6 +206,18 @@ export const ArtistsPage = () => {
         albums={albums}
         onClose={success => handleEditModalClose(success)}
         artist={selectedArtist}
+      />
+
+      <AddArtistModal
+        show={addArtistModalState}
+        albums={albums}
+        onClose={success => handleAddModalClose(success)}
+      />
+
+      <DeleteArtistModal
+        show={deleteArtistModalState}
+        artists={selectedArtists}
+        onClose={success => handleDeleteModalClose(success)}
       />
     </div>
   );
