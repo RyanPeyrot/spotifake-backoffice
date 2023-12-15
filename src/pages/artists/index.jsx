@@ -7,6 +7,7 @@ import {EditArtistModal} from './editArtistModal';
 
 export const ArtistsPage = () => {
   const [artists, setArtists] = useState([]);
+  const [albums, setAlbums] = useState([]);
   const [filteredArtists, setFilteredArtists] = useState([]);
   const [selectedArtists, setSelectedArtists] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState(null);
@@ -37,6 +38,14 @@ export const ArtistsPage = () => {
     setEditArtistModalState(true);
   };
 
+  const handleEditModalClose = success => {
+    setEditArtistModalState(false);
+
+    if (success) {
+      getArtists();
+    }
+  };
+
   const getArtists = () => {
     axiosService
       .get('/artists')
@@ -60,9 +69,38 @@ export const ArtistsPage = () => {
       });
   };
 
+  const getAlbums = () => {
+    axiosService
+      .get('/playlists')
+      .then(({data}) => {
+        const onlyAlbums = data
+          .filter(playlist => playlist.isAlbum)
+          .map(album => ({
+            value: album._id,
+            label: album.name,
+          }));
+
+        setAlbums(onlyAlbums);
+      })
+      .catch(error => {
+        console.error(error);
+
+        addToast({
+          title: 'Erreur',
+          message: "Impossible d'obtenir la liste des albums",
+          type: 'error',
+          id: Math.random(),
+        });
+      });
+  };
+
   useEffect(() => {
     getArtists();
   }, [searchTerm]);
+
+  useEffect(() => {
+    getAlbums();
+  }, []);
 
   useEffect(() => {
     const filteredArtists = artists.filter(artist =>
@@ -149,7 +187,8 @@ export const ArtistsPage = () => {
 
       <EditArtistModal
         show={editArtistModalState}
-        onClose={setEditArtistModalState}
+        albums={albums}
+        onClose={success => handleEditModalClose(success)}
         artist={selectedArtist}
       />
     </div>

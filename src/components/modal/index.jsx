@@ -1,4 +1,4 @@
-import {Button, Modal} from 'flowbite-react';
+import {Button, Modal, Spinner} from 'flowbite-react';
 
 export const SpotiModal = ({
   title,
@@ -7,6 +7,8 @@ export const SpotiModal = ({
   children,
   show,
   onClose,
+  onSubmit,
+  loading,
 }) => {
   return (
     <>
@@ -17,11 +19,14 @@ export const SpotiModal = ({
         onClose={() => onClose()}>
         <Modal.Header>{title}</Modal.Header>
         <Modal.Body>{children}</Modal.Body>
-        <Modal.Footer>
-          <Button color="gray" onClick={() => onClose()}>
+        <Modal.Footer className="flex justify-end">
+          <Button color="gray" disabled={loading} onClick={() => onClose()}>
             {cancel || 'Annuler'}
           </Button>
-          <Button onClick={() => onClose()}>{confirm || 'Confirmer'}</Button>
+          <Button disabled={loading} onClick={() => onSubmit()}>
+            {loading && <Spinner className="h-4 w-4 mr-2 -mt-1" />}
+            {confirm || 'Confirmer'}
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
