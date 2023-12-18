@@ -34,8 +34,6 @@ export const EditPlaylistModal = ({show, onClose, playlist}) => {
             }
           />
 
-          {/* <SelectMultiple id="countries" options={} /> */}
-
           {/* 
           <Table.HeadCell>Musiques</Table.HeadCell>
           <Table.HeadCell>Image (URL)</Table.HeadCell>

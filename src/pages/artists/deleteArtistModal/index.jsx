@@ -3,7 +3,7 @@ import {useState} from 'react';
 import axiosService from '../../../services/axios-service';
 import {useToastService} from '../../../services/toast-service';
 
-export const DeleteSongModal = ({show, onClose, songs}) => {
+export const DeleteArtistModal = ({show, onClose, artists}) => {
   const [loading, setLoading] = useState(false);
 
   const {addToast} = useToastService();
@@ -16,7 +16,9 @@ export const DeleteSongModal = ({show, onClose, songs}) => {
   const handleDelete = async () => {
     setLoading(true);
 
-    await Promise.all(songs.map(song => axiosService.delete(`/medias/${song}`)))
+    await Promise.all(
+      artists.map(artist => axiosService.delete(`/artists/${artist}`)),
+    )
       .then(() => {
         handleClose(true);
         addToast({
@@ -30,7 +32,7 @@ export const DeleteSongModal = ({show, onClose, songs}) => {
         addToast({
           type: 'error',
           message:
-            'Une erreur est survenue lors de la suppression des musiques',
+            'Une erreur est survenue lors de la suppression des artistes',
           title: 'Erreur',
         });
       });
@@ -44,7 +46,7 @@ export const DeleteSongModal = ({show, onClose, songs}) => {
       onClose={() => handleClose()}
       onSubmit={() => handleDelete()}
       loading={loading}>
-      <p>Voulez-vous vraiment supprimer les musiques sélectionnés ?</p>
+      <p>Voulez-vous vraiment supprimer les artistes sélectionnés ?</p>
     </SpotiModal>
   );
 };

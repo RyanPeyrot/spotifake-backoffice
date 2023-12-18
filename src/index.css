@@ -40,3 +40,7 @@ html {
 .toast {
   animation: toast 2s ease forwards;
 }
+
+li[aria-selected='true'] {
+  background: var(--spotiblack);
+}
