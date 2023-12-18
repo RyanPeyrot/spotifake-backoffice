@@ -109,6 +109,8 @@ export const AddArtistModal = ({show, onClose, albums}) => {
           <Label className="text-spotiblack">Albums</Label>
           <Select
             isMultiple={true}
+            isSearchable={true}
+            isClearable={true}
             placeholder="Albums de l'artiste"
             className="mt-1"
             value={artist.albums.map(album => ({

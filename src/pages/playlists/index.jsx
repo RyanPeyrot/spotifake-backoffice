@@ -1,6 +1,6 @@
 import {Button, Checkbox, Table, TextInput} from 'flowbite-react';
 import {useEffect, useState} from 'react';
-import {PencilIcon} from '@heroicons/react/24/solid';
+import {PencilIcon, ArrowTopRightOnSquareIcon} from '@heroicons/react/24/solid';
 import {AddPlaylistModal} from './addPlaylistModal';
 import {EditPlaylistModal} from './editPlaylistModal';
 import axiosService from '../../services/axios-service';
@@ -63,7 +63,7 @@ export const PlaylistsPage = () => {
     );
 
     setFilteredPlaylists(filteredPlaylists);
-  }, [playlists, searchTerm]);
+  }, [playlists]);
 
   const handleEditPlaylist = playlist => {
     setSelectedPlaylist(playlist);
@@ -122,14 +122,14 @@ export const PlaylistsPage = () => {
                 {new Date(playlist.createdAt).toLocaleDateString()}
               </Table.Cell>
               <Table.Cell>{playlist.creator || '-'}</Table.Cell>
-              <Table.Cell>{playlist.songs?.length || '-'}</Table.Cell>
+              <Table.Cell>{playlist.medias.length}</Table.Cell>
               <Table.Cell>
-                {playlist.image ? (
+                {playlist.thumbnail ? (
                   <a
-                    href={playlist.image}
+                    href={playlist.thumbnail}
                     target="_blank"
                     className="text-spotigreen">
-                    {playlist.image}
+                    <ArrowTopRightOnSquareIcon className="w-5 h-5" />
                   </a>
                 ) : (
                   '-'
