@@ -1,4 +1,4 @@
-import {Button, Checkbox, Table, TextInput} from 'flowbite-react';
+import {Button, Checkbox, Pagination, Table, TextInput} from 'flowbite-react';
 import {useEffect, useState} from 'react';
 import axiosService from '../../services/axios-service';
 import {useToastService} from '../../services/toast-service';
@@ -17,6 +17,7 @@ export const ArtistsPage = () => {
   const [addArtistModalState, setAddArtistModalState] = useState(false);
   const [deleteArtistModalState, setDeleteArtistModalState] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const {addToast} = useToastService();
 
   const handleSelectAll = () => {
@@ -111,6 +112,8 @@ export const ArtistsPage = () => {
       });
   };
 
+  const onPageChange = page => setCurrentPage(page);
+
   useEffect(() => {
     getArtists();
   }, []);
@@ -120,15 +123,15 @@ export const ArtistsPage = () => {
   }, []);
 
   useEffect(() => {
-    const filteredArtists = artists.filter(artist =>
-      artist.tag.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
+    const filteredArtists = artists
+      .filter(song => song.tag.toLowerCase().includes(searchTerm.toLowerCase()))
+      .slice((currentPage - 1) * 10, currentPage * 10);
 
     setFilteredArtists(filteredArtists);
-  }, [artists, searchTerm]);
+  }, [artists, searchTerm, currentPage]);
 
   return (
-    <div>
+    <div id="artists">
       <div className="flex justify-between">
         <h1 className="text-2xl font-semibold">Liste des artistes</h1>
 
@@ -201,6 +204,19 @@ export const ArtistsPage = () => {
           ))}
         </Table.Body>
       </Table>
+
+      {artists.length > 10 && (
+        <div className="flex overflow-x-auto sm:justify-center mt-5">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(artists.length / 10)}
+            onPageChange={onPageChange}
+            showIcons={true}
+            previousLabel="Précédent"
+            nextLabel="Suivant"
+          />
+        </div>
+      )}
 
       <EditArtistModal
         show={editArtistModalState}

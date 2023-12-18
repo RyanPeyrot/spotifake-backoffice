@@ -1,7 +1,6 @@
-import {Fragment, useEffect} from 'react';
+import {Fragment} from 'react';
 import {Disclosure, Menu, Transition} from '@headlessui/react';
 import {Bars3Icon, BellIcon, XMarkIcon} from '@heroicons/react/24/outline';
-import {useLocation} from 'react-router-dom';
 
 const navigation = [
   {name: 'Liste des musiques', href: '/songs', current: true},
@@ -16,12 +15,6 @@ const classNames = (...classes) => {
 };
 
 const Navbar = () => {
-  const [currentLocation, setCurrentLocation] = useLocation();
-
-  useEffect(() => {
-    console.log(currentLocation);
-  }, [currentLocation]);
-
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({open}) => (
