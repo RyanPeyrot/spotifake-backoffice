@@ -72,6 +72,7 @@ export const EditSongModal = ({show, onClose, song, albums, artists}) => {
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
 
         addToast({
           title: 'Erreur',

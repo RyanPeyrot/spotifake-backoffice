@@ -29,6 +29,8 @@ export const DeleteArtistModal = ({show, onClose, artists}) => {
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
+
         addToast({
           type: 'error',
           message:

@@ -27,6 +27,8 @@ export const DeleteSongModal = ({show, onClose, songs}) => {
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
+
         addToast({
           type: 'error',
           message:

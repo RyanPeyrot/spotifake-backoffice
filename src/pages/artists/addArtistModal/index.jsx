@@ -51,6 +51,12 @@ export const AddArtistModal = ({show, onClose, albums}) => {
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
+        addToast({
+          type: 'error',
+          message: "Une erreur est survenue lors de la création de l'artiste",
+          title: 'Erreur',
+        });
       });
   };
 

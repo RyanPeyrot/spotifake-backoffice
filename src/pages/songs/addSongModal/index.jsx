@@ -35,7 +35,11 @@ export const AddSongModal = ({show, onClose, albums, artists}) => {
     const formData = new FormData();
     formData.append('file', songFile);
     axiosService
-      .post(`/medias`, formData)
+      .post(`/medias`, songFile, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
       .then(({data}) => {
         // if (!thumbnail) {
         //   handleClose(true);
@@ -73,6 +77,7 @@ export const AddSongModal = ({show, onClose, albums, artists}) => {
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
 
         addToast({
           title: 'Erreur',
@@ -95,8 +100,8 @@ export const AddSongModal = ({show, onClose, albums, artists}) => {
 
   return (
     <SpotiModal
-      title="Modifier une musique"
-      confirm="Modifier"
+      title="Ajouter une musique"
+      confirm="Ajouter"
       show={show}
       onClose={() => handleClose()}
       onSubmit={() => handleSubmit()}

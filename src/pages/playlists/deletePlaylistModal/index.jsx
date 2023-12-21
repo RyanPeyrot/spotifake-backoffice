@@ -29,6 +29,8 @@ export const DeletePlaylistModal = ({show, onClose, playlists}) => {
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
+
         addToast({
           type: 'error',
           message:

@@ -21,7 +21,7 @@ export const EditPlaylistModal = ({
     setThumbnail(playlist?.thumbnail);
     setNewPlaylist({
       ...playlist,
-      medias: playlist.medias.map(media => ({
+      medias: playlist?.medias?.map(media => ({
         label: media.title,
         value: media._id,
       })),
@@ -42,7 +42,7 @@ export const EditPlaylistModal = ({
       .put(`/playlists/${newPlaylist._id}`, {
         name: newPlaylist.name,
         creator: newPlaylist.creator.label,
-        medias: newPlaylist.medias.map(media => media.value),
+        medias: newPlaylist.medias?.map(media => media.value),
         isAlbum: newPlaylist.isAlbum,
       })
       .then(({data}) => {
@@ -57,6 +57,7 @@ export const EditPlaylistModal = ({
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
 
         addToast({
           title: 'Erreur',
@@ -148,7 +149,7 @@ export const EditPlaylistModal = ({
               isSearchable={true}
               isClearable={true}
               isMultiple={true}
-              value={newPlaylist.medias}
+              value={newPlaylist.medias || []}
               onChange={e => {
                 console.log(e);
                 setNewPlaylist({

@@ -45,6 +45,13 @@ export const EditArtistModal = ({show, onClose, artist, albums}) => {
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
+        addToast({
+          type: 'error',
+          message:
+            "Une erreur est survenue lors de la modification de l'artiste",
+          title: 'Erreur',
+        });
       });
   };
 

@@ -1,6 +1,6 @@
 import {Button, Checkbox, Pagination, Table, TextInput} from 'flowbite-react';
 import {useEffect, useState} from 'react';
-import {PencilIcon, ArrowTopRightOnSquareIcon} from '@heroicons/react/24/solid';
+import {PencilIcon} from '@heroicons/react/24/solid';
 import {AddPlaylistModal} from './addPlaylistModal';
 import {EditPlaylistModal} from './editPlaylistModal';
 import {DeletePlaylistModal} from './deletePlaylistModal';
@@ -147,6 +147,7 @@ export const PlaylistsPage = () => {
         playlist.tag.toLowerCase().includes(searchTerm.toLowerCase()),
       )
       .slice((currentPage - 1) * 10, currentPage * 10);
+    console.log(filteredPlaylists);
 
     setFilteredPlaylists(filteredPlaylists);
   }, [playlists, searchTerm, currentPage]);
@@ -209,7 +210,7 @@ export const PlaylistsPage = () => {
                 {new Date(playlist.createdAt).toLocaleDateString()}
               </Table.Cell>
               <Table.Cell>{playlist.creator || '-'}</Table.Cell>
-              <Table.Cell>{playlist.medias.length}</Table.Cell>
+              <Table.Cell>{playlist.medias?.length || 0}</Table.Cell>
               <Table.Cell>
                 {playlist.thumbnail ? (
                   <a

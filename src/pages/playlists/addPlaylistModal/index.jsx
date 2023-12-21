@@ -46,7 +46,7 @@ export const AddPlaylistModal = ({show, onClose, songs, artists}) => {
       .post(`/playlists`, {
         name: newPlaylist.name,
         creator: newPlaylist.creator.label,
-        medias: newPlaylist.medias.map(media => media.value),
+        medias: newPlaylist.medias?.map(media => media.value),
         isAlbum: newPlaylist.isAlbum,
         createdAt: new Date(),
       })
@@ -72,6 +72,7 @@ export const AddPlaylistModal = ({show, onClose, songs, artists}) => {
       })
       .catch(error => {
         console.error(error);
+        setLoading(false);
 
         addToast({
           title: 'Erreur',
@@ -160,7 +161,7 @@ export const AddPlaylistModal = ({show, onClose, songs, artists}) => {
             isSearchable={true}
             isClearable={true}
             isMultiple={true}
-            value={newPlaylist.medias}
+            value={newPlaylist.medias || []}
             onChange={e => {
               console.log(e);
               setNewPlaylist({
