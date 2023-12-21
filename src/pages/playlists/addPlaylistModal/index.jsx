@@ -48,13 +48,24 @@ export const AddPlaylistModal = ({show, onClose, songs, artists}) => {
         creator: newPlaylist.creator.label,
         medias: newPlaylist.medias.map(media => media.value),
         isAlbum: newPlaylist.isAlbum,
+        createdAt: new Date(),
       })
       .then(({data}) => {
         if (typeof thumbnail == 'string') {
           handleClose(true);
+          addToast({
+            title: 'Succès',
+            message: 'La playlist/album a été créée avec succès',
+            type: 'success',
+          });
           return;
         } else {
           handleUploadThumbnail(data).then(() => {
+            addToast({
+              title: 'Succès',
+              message: 'La playlist/album a été créée avec succès',
+              type: 'success',
+            });
             handleClose(true);
           });
         }

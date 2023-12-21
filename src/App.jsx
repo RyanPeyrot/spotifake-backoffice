@@ -82,7 +82,7 @@ const App = () => {
                 sidebarStateChanged={value => onSidebarStateChange(value)}
               />
               <Routes>
-                <Route exact path="/" element={<HomePage></HomePage>} />
+                <Route exact path="/" element={<LoginPage></LoginPage>} />
                 <Route path="/home" element={<HomePage></HomePage>} />
                 <Route path="/login" element={<LoginPage></LoginPage>} />
                 <Route

@@ -19,7 +19,13 @@ export const EditPlaylistModal = ({
 
   useEffect(() => {
     setThumbnail(playlist?.thumbnail);
-    setNewPlaylist(playlist);
+    setNewPlaylist({
+      ...playlist,
+      medias: playlist.medias.map(media => ({
+        label: media.title,
+        value: media._id,
+      })),
+    });
   }, [show]);
 
   const handleClose = (success = false) => {
@@ -31,7 +37,7 @@ export const EditPlaylistModal = ({
 
   const handleSubmit = () => {
     setLoading(true);
-
+    console.log(newPlaylist);
     axiosService
       .put(`/playlists/${newPlaylist._id}`, {
         name: newPlaylist.name,

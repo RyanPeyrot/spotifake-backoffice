@@ -23,7 +23,7 @@ export const SpotiSidebar = ({sidebarStateChanged}) => {
     sidebarStateChanged?.(collapsed);
   }, [collapsed]);
 
-  if (location.pathname === '/login') {
+  if (location.pathname === '/login' || location.pathname === '/') {
     return null;
   }
 
