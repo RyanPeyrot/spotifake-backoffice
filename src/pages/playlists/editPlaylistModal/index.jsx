@@ -13,6 +13,7 @@ export const EditPlaylistModal = ({
   artists,
 }) => {
   const [newPlaylist, setNewPlaylist] = useState(playlist);
+  const [initialMedias, setInitialMedias] = useState([]);
   const [loading, setLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
   const {addToast} = useToastService();
@@ -26,6 +27,7 @@ export const EditPlaylistModal = ({
         value: media._id,
       })),
     });
+    setInitialMedias(playlist?.medias?.map(media => media._id));
   }, [show]);
 
   const handleClose = (success = false) => {
@@ -35,36 +37,51 @@ export const EditPlaylistModal = ({
     onClose(success);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const newSongs = newPlaylist.medias?.map(media => media.value);
     setLoading(true);
-    console.log(newPlaylist);
-    axiosService
-      .put(`/playlists/${newPlaylist._id}`, {
-        name: newPlaylist.name,
-        creator: newPlaylist.creator.label,
-        medias: newPlaylist.medias?.map(media => media.value),
-        isAlbum: newPlaylist.isAlbum,
-      })
-      .then(({data}) => {
-        if (typeof thumbnail == 'string') {
-          handleClose(true);
-          return;
-        } else {
-          handleUploadThumbnail().then(() => {
-            handleClose(true);
-          });
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
 
-        addToast({
-          title: 'Erreur',
-          message: 'Impossible de modifier la playlist/album',
-          type: 'error',
+    const songsToDelete = initialMedias.filter(
+      media => !newSongs.includes(media),
+    );
+
+    await Promise.all(
+      songsToDelete.map(song =>
+        axiosService.delete(`/playlists/song/${newPlaylist._id}`, {
+          headers: {
+            media: song,
+          },
+        }),
+      ),
+    ).then(() => {
+      axiosService
+        .put(`/playlists/${newPlaylist._id}`, {
+          name: newPlaylist.name,
+          creator: newPlaylist.creator.label,
+          medias: newSongs,
+          isAlbum: newPlaylist.isAlbum,
+        })
+        .then(() => {
+          if (typeof thumbnail == 'string') {
+            handleClose(true);
+            return;
+          } else {
+            handleUploadThumbnail().then(() => {
+              handleClose(true);
+            });
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          setLoading(false);
+
+          addToast({
+            title: 'Erreur',
+            message: 'Impossible de modifier la playlist/album',
+            type: 'error',
+          });
         });
-      });
+    });
   };
 
   const handleUploadThumbnail = async () => {

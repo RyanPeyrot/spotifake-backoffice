@@ -33,13 +33,15 @@ export const EditSongModal = ({show, onClose, song, albums, artists}) => {
         title: newSong.title,
         album: newSong.album?._id,
         genre: newSong.genre,
-        artists: newSong.artists?.map(artist => artist._id),
+        artist: newSong.artist?.map(artist => artist._id),
       })
       .then(({data}) => {
-        if (!thumbnail) {
+        const hasNewThumbnail = typeof thumbnail != 'string';
+        const hasNewSong = typeof songLink != 'string';
+        if (!hasNewThumbnail && !hasNewSong) {
           handleClose(true);
           return;
-        } else if (thumbnail && !songLink) {
+        } else if (hasNewThumbnail && !hasNewSong) {
           handleUploadThumbnail().then(() => {
             handleClose(true);
             addToast({
@@ -48,7 +50,7 @@ export const EditSongModal = ({show, onClose, song, albums, artists}) => {
               type: 'success',
             });
           });
-        } else if (!thumbnail && songLink) {
+        } else if (!hasNewThumbnail && hasNewSong) {
           handleUploadSong().then(() => {
             handleClose(true);
             addToast({
@@ -57,7 +59,7 @@ export const EditSongModal = ({show, onClose, song, albums, artists}) => {
               type: 'success',
             });
           });
-        } else if (thumbnail && songLink) {
+        } else if (hasNewThumbnail && hasNewSong) {
           handleUploadThumbnail().then(() => {
             handleUploadSong().then(() => {
               handleClose(true);
@@ -174,14 +176,14 @@ export const EditSongModal = ({show, onClose, song, albums, artists}) => {
               isMultiple={true}
               placeholder="Artistes de la musique"
               className="mt-1"
-              value={newSong.artists?.map(album => ({
+              value={newSong.artist?.map(album => ({
                 value: album._id,
                 label: album.name,
               }))}
               onChange={e =>
                 setNewSong({
                   ...newSong,
-                  artists: e.map(album => ({
+                  artist: e.map(album => ({
                     ...album,
                     _id: album.value,
                     name: album.label,

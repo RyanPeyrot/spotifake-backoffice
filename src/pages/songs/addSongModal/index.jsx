@@ -35,11 +35,7 @@ export const AddSongModal = ({show, onClose, albums, artists}) => {
     const formData = new FormData();
     formData.append('file', songFile);
     axiosService
-      .post(`/medias`, songFile, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      .post(`/medias`, formData)
       .then(({data}) => {
         // if (!thumbnail) {
         //   handleClose(true);
@@ -49,7 +45,7 @@ export const AddSongModal = ({show, onClose, albums, artists}) => {
         //     handleClose(true);
         //     addToast({
         //       title: 'Succès',
-        //       message: 'Musique modifiée avec succès',
+        //       message: 'Musique ajoutée avec succès',
         //       type: 'success',
         //     });
         //   });
@@ -58,7 +54,7 @@ export const AddSongModal = ({show, onClose, albums, artists}) => {
         //     handleClose(true);
         //     addToast({
         //       title: 'Succès',
-        //       message: 'Musique modifiée avec succès',
+        //       message: 'Musique ajoutée avec succès',
         //       type: 'success',
         //     });
         //   });
@@ -68,7 +64,7 @@ export const AddSongModal = ({show, onClose, albums, artists}) => {
         //       handleClose(true);
         //       addToast({
         //         title: 'Succès',
-        //         message: 'Musique modifiée avec succès',
+        //         message: 'Musique ajoutée avec succès',
         //         type: 'success',
         //       });
         //     });
@@ -81,7 +77,7 @@ export const AddSongModal = ({show, onClose, albums, artists}) => {
 
         addToast({
           title: 'Erreur',
-          message: 'Impossible de modifier la musique',
+          message: "Impossible d'ajouter la musique",
           type: 'error',
         });
       });
